@@ -13,7 +13,7 @@ const config: HardhatUserConfig = {
     // venv: "../.venv",
 
     // uses the currently active Python environment (hopefully with available Starknet commands!)
-    // venv: 'active',
+    venv: 'active',
     // network: "alpha-goerli",
     network: 'devnet',
     wallets: {
@@ -27,11 +27,12 @@ const config: HardhatUserConfig = {
   networks: {
     devnet: {
       url: 'http://127.0.0.1:5050',
+      // venv: 'active',
     },
     integratedDevnet: {
       url: 'http://127.0.0.1:5050',
-      //venv: 'active',
-      dockerizedVersion: "0.2.0"
+      // venv: 'active',
+      // dockerizedVersion: "0.2.0"
     },
   },
 }
