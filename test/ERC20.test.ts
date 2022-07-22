@@ -53,4 +53,12 @@ describe('Test ERC20', function () {
         console.log("Balance Owner: ", balanceOwner)
         expect(balanceOwner).to.deep.equal({high: 0n, low: 990n})
     })
+
+    it('should transferFrom successfully', async () => {
+        await user.invoke(ERC20, "approve", {spender: owner.address, amount: {high: 0, low: 3n}})
+        let {balance: user_balance} = await user.call(ERC20, "balanceOf", {account: user.address})
+        await owner.invoke(ERC20, "transferFrom", {sender: user.address, recipient: owner.address, amount: {high: 0n, low: 3n}})
+        let {balance: new_user_balance} = await user.call(ERC20, "balanceOf", {account: user.address})
+        expect(user_balance).to.not.deep.equal(new_user_balance);
+    });
 })
