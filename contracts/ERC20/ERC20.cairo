@@ -77,6 +77,15 @@ func allowance{
     return (remaining)
 end
 
+@view
+func balanceOf{
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr
+    }(account: felt) -> (balance: Uint256):
+    let (balance: Uint256) = ERC20.balanceOf(account)
+    return (balance)
+end
 #
 # Externals
 #

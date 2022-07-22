@@ -122,6 +122,15 @@ namespace ERC20:
         return (remaining)
     end
 
+    func balanceOf{
+            syscall_ptr: felt*,
+            pedersen_ptr: HashBuiltin*,
+            range_check_ptr
+        }(owner: felt) -> (balance: Uint256):
+        let (balance: Uint256) = ERC20_balances.read(owner)
+        return (balance)
+    end
+
     func transfer{
             syscall_ptr : felt*,
             pedersen_ptr : HashBuiltin*,
