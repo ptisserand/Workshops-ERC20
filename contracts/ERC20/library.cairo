@@ -49,6 +49,10 @@ end
 func ERC20_allowances(owner: felt, spender: felt) -> (allowance: Uint256):
 end
 
+@storage_var
+func ERC20_owner() -> (owner: felt):
+end
+
 namespace ERC20:
 
     #
@@ -62,8 +66,10 @@ namespace ERC20:
         }(
             name: felt,
             symbol: felt,
-            decimals: felt
+            decimals: felt,
+            owner: felt
         ):
+        ERC20_owner.write(owner)
         ERC20_name.write(name)
         ERC20_symbol.write(symbol)
         with_attr error_message("ERC20: decimals exceed 2^8"):
@@ -219,9 +225,11 @@ namespace ERC20:
             pedersen_ptr: HashBuiltin*,
             range_check_ptr
         }(decimals: felt) -> ():
-        #if 0 != is_gt(decimals,20):
-        #    raise("ERC20: decimals is too large"):
-        #end
+        let (sender) = get_caller_address()
+        let owner: felt = ERC20_owner.read()
+        with_attr error_message("ERC20: only owner can set decimals"):
+            assert owner = sender
+        end
         ERC20_decimals.write(decimals)
         return ()
     end
