@@ -144,11 +144,12 @@ func decreaseAllowance{
     return (TRUE)
 end
 
-# @external
-# func setDecimal{
-#         syscall_ptr: felt*,
-#         pedersen_ptr: HashBuiltin*,
-#         range_check_ptr
-#     }(decimals: felt) -> (success: felt):
-#     #ERC20.
-# end
+@external
+func setDecimals{
+        syscall_ptr: felt*,
+        pedersen_ptr: HashBuiltin*,
+        range_check_ptr
+    }(decimals: felt) -> (success: felt):
+    ERC20.setDecimals(decimals)
+    return (TRUE)
+end

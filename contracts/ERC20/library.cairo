@@ -214,6 +214,18 @@ namespace ERC20:
         return ()
     end
 
+    func setDecimals{
+            syscall_ptr: felt*,
+            pedersen_ptr: HashBuiltin*,
+            range_check_ptr
+        }(decimals: felt) -> ():
+        #if 0 != is_gt(decimals,20):
+        #    raise("ERC20: decimals is too large"):
+        #end
+        ERC20_decimals.write(decimals)
+        return ()
+    end
+
     #
     # Internal
     #
