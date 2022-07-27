@@ -193,6 +193,27 @@ namespace ERC20:
         return ()
     end
 
+    func decrease_allowance{
+            syscall_ptr: felt*,
+            pedersen_ptr: HashBuiltin*,
+            range_check_ptr
+        }(spender: felt, removed_value: Uint256) -> ():
+        with_attr error("ERC20: removed_value is not a valid Uint256"):
+            uint256_check(removed_value)
+        end
+
+        let (caller) = get_caller_address()
+        let (current_allowance: Uint256) = ERC20_allowances.read(caller, spender)
+
+        # add allowance
+        with_attr error_message("ERC20: allowance underflow"):
+            let (new_allowance: Uint256) = SafeUint256.sub_le(current_allowance, removed_value)
+        end
+        let (caller) = get_caller_address()
+        _approve(caller, spender, new_allowance)
+        return ()
+    end
+
     #
     # Internal
     #

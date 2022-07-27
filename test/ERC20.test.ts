@@ -3,6 +3,7 @@ import BN from 'bn.js'
 import { starknet } from 'hardhat'
 import { constants, ec, encode, hash, number, uint256, stark, KeyPair } from 'starknet'
 import { BigNumberish } from 'starknet/utils/number'
+
 import { Account, StarknetContract, StarknetContractFactory } from 'hardhat/types/runtime'
 import { TIMEOUT } from './constants'
 
@@ -55,10 +56,24 @@ describe('Test ERC20', function () {
     })
 
     it('should transferFrom successfully', async () => {
+        /* expect(
+            await owner.invoke(ERC20, "transferFrom", {sender: user.address, recipient: owner.address, amount: {high: 0n, low: 3n}})
+        ).to.throw();
+        */
         await user.invoke(ERC20, "approve", {spender: owner.address, amount: {high: 0, low: 3n}})
         let {balance: user_balance} = await user.call(ERC20, "balanceOf", {account: user.address})
         await owner.invoke(ERC20, "transferFrom", {sender: user.address, recipient: owner.address, amount: {high: 0n, low: 3n}})
         let {balance: new_user_balance} = await user.call(ERC20, "balanceOf", {account: user.address})
         expect(user_balance).to.not.deep.equal(new_user_balance);
+    });
+
+    it('should decreaseAllowance successfully', async () => {
+        await user.invoke(ERC20, "approve", {spender: owner.address, amount: {high: 0n, low: 1000n}})
+        let { remaining } = await user.call(ERC20, "allowance", {owner: user.address, spender: owner.address})
+        expect(remaining).to.deep.equal({high: 0n, low: 1000n})
+        await user.invoke(ERC20, "decreaseAllowance", {spender: owner.address, removed_value: {high: 0n, low: 500n}})
+        let {remaining: new_remaining}  = await user.call(ERC20, "allowance", {owner: user.address, spender: owner.address})
+        expect(new_remaining).to.deep.equal({high: 0n, low: 500n})
+        
     });
 })
